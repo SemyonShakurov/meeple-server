@@ -38,7 +38,6 @@ public class RegistrationController {
     @GetMapping(path = "/getAll")
     public @ResponseBody
     Iterable<User> getAllUsers() {
-        userRepository.deleteAll();
         return userRepository.findAll();
     }
 
