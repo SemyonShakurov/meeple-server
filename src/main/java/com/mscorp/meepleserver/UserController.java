@@ -19,6 +19,16 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @GetMapping(path = "/get")
+    public @ResponseBody
+    User getUser(@RequestParam Integer id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "user is not exists");
+
+        return userOptional.get();
+    }
+
     @PutMapping(path = "/sendRequest")
     public @ResponseBody
     User sendRequest(@RequestParam Integer id,
