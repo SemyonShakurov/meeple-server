@@ -30,15 +30,10 @@ public class RegistrationController {
         user.setName(name);
         user.setRequestsFromOthers(new ArrayList<>());
         user.setRequestsToOthers(new ArrayList<>());
+        user.setPhotoUrl("https://image.flaticon.com/icons/png/512/168/168726.png");
         checkUser(user);
         userRepository.save(user);
         return user;
-    }
-
-    @GetMapping(path = "/getAll")
-    public @ResponseBody
-    Iterable<User> getAllUsers() {
-        return userRepository.findAll();
     }
 
     private void checkUser(User newUser) {

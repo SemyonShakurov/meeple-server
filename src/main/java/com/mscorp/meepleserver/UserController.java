@@ -19,7 +19,7 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @PostMapping(path = "/sendRequest")
+    @PutMapping(path = "/sendRequest")
     public @ResponseBody
     User sendRequest(@RequestParam Integer id,
                      @RequestParam Integer friendId) throws ResponseStatusException {
@@ -79,30 +79,64 @@ public class UserController {
         return friends1;
     }
 
-    @PostMapping(path = "/acceptRequest")
+    @PutMapping(path = "/acceptRequest")
     public @ResponseBody
     User acceptRequest(@RequestParam Integer id,
                        @RequestParam Integer friendId) {
         User user = userRepository.findById(id).get();
         User friend = userRepository.findById(friendId).get();
-        for (Integer idFriend : user.getRequestsFromOthers()) {
-            if (idFriend.equals(friendId)) {
-                user.getRequestsFromOthers().remove(idFriend);
-                break;
-            }
-        }
+
+        user.getRequestsFromOthers().remove(friendId);
         user.getFriends().add(friendId);
         userRepository.save(user);
 
-        for (Integer idFriend : friend.getRequestsToOthers()) {
-            if (idFriend.equals(id)) {
-                friend.getRequestsToOthers().remove(idFriend);
-                break;
-            }
-        }
-
+        friend.getRequestsToOthers().remove(id);
         friend.getFriends().add(id);
         userRepository.save(friend);
         return friend;
+    }
+
+    @PutMapping(path = "/rejectRequest")
+    public @ResponseBody
+    User rejectRequest(@RequestParam Integer id,
+                       @RequestParam Integer friendId) {
+        User user = userRepository.findById(id).get();
+        User friend = userRepository.findById(friendId).get();
+
+        user.getRequestsToOthers().remove(friendId);
+        userRepository.save(user);
+
+        friend.getRequestsFromOthers().remove(id);
+        userRepository.save(friend);
+
+        return friend;
+    }
+
+    @PutMapping(path = "/deleteFriend")
+    public @ResponseBody
+    User deleteFriend(@RequestParam Integer id,
+                      @RequestParam Integer friendId) {
+        User user = userRepository.findById(id).get();
+        User friend = userRepository.findById(friendId).get();
+
+        user.getFriends().remove(friendId);
+        user.getRequestsFromOthers().add(friendId);
+
+        friend.getFriends().remove(id);
+        friend.getRequestsToOthers().add(id);
+
+        return friend;
+    }
+
+    @GetMapping(path = "/getAll")
+    public @ResponseBody
+    Iterable<User> getAllUsers() {
+//        return userRepository.findAll();
+        Iterable<User> users = userRepository.findAll();
+        for (User user : users) {
+            user.setPhotoUrl("https://image.flaticon.com/icons/png/512/168/168726.png");
+            userRepository.save(user);
+        }
+        return users;
     }
 }

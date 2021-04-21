@@ -21,7 +21,7 @@ public class User {
 
     private String email;
 
-    private String photoUrl = null;
+    private String photoUrl;
 
     @JsonIgnore
     @ElementCollection
