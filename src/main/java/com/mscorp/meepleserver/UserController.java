@@ -131,12 +131,6 @@ public class UserController {
     @GetMapping(path = "/getAll")
     public @ResponseBody
     Iterable<User> getAllUsers() {
-//        return userRepository.findAll();
-        Iterable<User> users = userRepository.findAll();
-        for (User user : users) {
-            user.setPhotoUrl("https://image.flaticon.com/icons/png/512/168/168726.png");
-            userRepository.save(user);
-        }
-        return users;
+        return userRepository.findAll();
     }
 }
