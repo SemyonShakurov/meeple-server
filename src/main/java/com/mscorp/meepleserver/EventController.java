@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "events")
+@RequestMapping(path = "/events")
 public class EventController {
 
     @Autowired
     private EventRepository eventRepository;
 
-    @PostMapping
+    @PostMapping(path = "/addEvent")
     public @ResponseBody
     Event addEvent(@RequestParam String title,
                    @RequestParam Integer count,
@@ -41,7 +41,7 @@ public class EventController {
         return event;
     }
 
-    @GetMapping
+    @GetMapping(path = "getAll")
     public @ResponseBody
     Iterable<Event> getEvents() {
         return eventRepository.findAll();
