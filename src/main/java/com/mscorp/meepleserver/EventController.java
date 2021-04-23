@@ -5,6 +5,7 @@ import com.mscorp.meepleserver.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,13 +19,13 @@ public class EventController {
     public @ResponseBody
     Event addEvent(@RequestParam String title,
                    @RequestParam Integer count,
-                   @RequestParam List<Integer> games,
+                   @RequestParam(defaultValue = "1") List<Integer> games,
                    @RequestParam Integer playersLevel,
                    @RequestParam Integer type,
                    @RequestParam String info,
                    @RequestParam Integer date,
                    @RequestParam Integer access,
-                   @RequestParam List<Integer> members,
+                   @RequestParam(defaultValue = "1") List<Integer> members,
                    @RequestParam Integer creatorId) {
         Event event = new Event();
         event.setCount(count);
