@@ -81,10 +81,15 @@ public class UserController {
         for (Integer friend : user.getFriends())
             friends.add(userRepository.findById(friend).get());
 
+        List<User> declined = new ArrayList<>();
+        for (Integer userId : user.getDeclined())
+            declined.add(userRepository.findById(userId).get());
+
         Friends friends1 = new Friends();
         friends1.setFriends(friends);
         friends1.setReceived(requestsFrom);
         friends1.setSent(requestsTo);
+        friends1.setDeclined(declined);
 
         return friends1;
     }
@@ -96,7 +101,11 @@ public class UserController {
         User user = userRepository.findById(id).get();
         User friend = userRepository.findById(friendId).get();
 
-        user.getRequestsFromOthers().remove(friendId);
+        if (user.getRequestsFromOthers().contains(friendId))
+            user.getRequestsFromOthers().remove(friendId);
+        else
+            user.getDeclined().remove(friendId);
+
         user.getFriends().add(friendId);
         userRepository.save(user);
 
@@ -116,7 +125,11 @@ public class UserController {
         user.getRequestsToOthers().remove(friendId);
         userRepository.save(user);
 
-        friend.getRequestsFromOthers().remove(id);
+        if (friend.getRequestsFromOthers().contains(id))
+            friend.getRequestsFromOthers().remove(id);
+        else
+            friend.getDeclined().remove(id);
+
         userRepository.save(friend);
 
         return friend;
@@ -130,7 +143,7 @@ public class UserController {
         User friend = userRepository.findById(friendId).get();
 
         user.getFriends().remove(friendId);
-        user.getRequestsFromOthers().add(friendId);
+        user.getDeclined().add(friendId);
 
         friend.getFriends().remove(id);
         friend.getRequestsToOthers().add(id);
@@ -138,9 +151,30 @@ public class UserController {
         return friend;
     }
 
+    @PutMapping(path = "/declineRequest")
+    public @ResponseBody
+    User declineRequest(@RequestParam Integer id,
+                        @RequestParam Integer friendId) {
+        User user = userRepository.findById(id).get();
+
+        user.getRequestsFromOthers().remove(friendId);
+        user.getDeclined().add(friendId);
+        userRepository.save(user);
+
+        return userRepository.findById(friendId).get();
+    }
+
     @GetMapping(path = "/getAll")
     public @ResponseBody
     Iterable<User> getAllUsers() {
-        return userRepository.findAll();
+//        return userRepository.findAll();
+        Iterable<User> users = userRepository.findAll();
+        for (User user : users) {
+            user.getFriends().clear();
+            user.getRequestsFromOthers().clear();
+            user.getRequestsToOthers().clear();
+            userRepository.save(user);
+        }
+        return users;
     }
 }

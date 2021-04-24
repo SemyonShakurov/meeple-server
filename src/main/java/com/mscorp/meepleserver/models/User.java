@@ -35,6 +35,10 @@ public class User {
     @ElementCollection
     private List<Integer> requestsToOthers;
 
+    @JsonIgnore
+    @ElementCollection
+    private List<Integer> declined;
+
     public void setId(Integer id) {
         this.id = id;
     }
@@ -105,5 +109,13 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    public void setDeclined(List<Integer> declined) {
+        this.declined = declined;
+    }
+
+    public List<Integer> getDeclined() {
+        return declined;
     }
 }

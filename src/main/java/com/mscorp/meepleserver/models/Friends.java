@@ -10,6 +10,8 @@ public class Friends {
 
     private List<User> received;
 
+    private List<User> declined;
+
     public void setFriends(List<User> friends) {
         this.friends = friends;
     }
@@ -32,5 +34,13 @@ public class Friends {
 
     public List<User> getSent() {
         return sent;
+    }
+
+    public void setDeclined(List<User> declined) {
+        this.declined = declined;
+    }
+
+    public List<User> getDeclined() {
+        return declined;
     }
 }
