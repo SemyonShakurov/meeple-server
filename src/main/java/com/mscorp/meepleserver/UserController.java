@@ -167,6 +167,14 @@ public class UserController {
     @GetMapping(path = "/getAll")
     public @ResponseBody
     Iterable<User> getAllUsers() {
-        return userRepository.findAll();
+//        return userRepository.findAll();
+        Iterable<User> users = userRepository.findAll();
+        for (User user : users) {
+            user.setFriends(new ArrayList<>());
+            user.setRequestsFromOthers(new ArrayList<>());
+            user.setRequestsToOthers(new ArrayList<>());
+            user.setDeclined(new ArrayList<>());
+        }
+        return users;
     }
 }
