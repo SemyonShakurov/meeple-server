@@ -174,6 +174,7 @@ public class UserController {
             user.setRequestsFromOthers(new ArrayList<>());
             user.setRequestsToOthers(new ArrayList<>());
             user.setDeclined(new ArrayList<>());
+            userRepository.save(user);
         }
         return users;
     }
