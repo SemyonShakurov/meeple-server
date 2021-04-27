@@ -1,5 +1,6 @@
 package com.mscorp.meepleserver;
 
+import com.mscorp.meepleserver.models.EmailServiceImpl;
 import com.mscorp.meepleserver.models.User;
 import com.mscorp.meepleserver.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,17 +50,12 @@ public class RegistrationController {
         Integer code = (int) (1000 + 9000 * Math.random());
         user.setCode(code);
 
-        String email = user.getEmail();
         String subject = "Подтверждение почты";
         String text = "Добро пожаловать в Meeple! Для подтверждения почты введите код:\n" +
                 code + "\nЕсли вы не регистрировались в приложении, проигнорируйте данное сообщение.";
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setSubject(subject);
-        message.setText(text);
-        message.setTo(email);
 
-        JavaMailSenderImpl emailSender = new JavaMailSenderImpl();
-        emailSender.send(message);
+        EmailServiceImpl emailSender = new EmailServiceImpl();
+        emailSender.sendSimpleMessage(user.getEmail(), subject, text);
     }
 
     private void checkUser(User newUser) {
