@@ -1,12 +1,11 @@
 package com.mscorp.meepleserver;
 
-import com.mscorp.meepleserver.models.EmailServiceImpl;
 import com.mscorp.meepleserver.models.User;
 import com.mscorp.meepleserver.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -22,6 +21,9 @@ public class RegistrationController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private JavaMailSender emailSender;
 
     @PostMapping(path = "/add")
     public @ResponseBody
@@ -54,8 +56,16 @@ public class RegistrationController {
         String text = "Добро пожаловать в Meeple! Для подтверждения почты введите код:\n" +
                 code + "\nЕсли вы не регистрировались в приложении, проигнорируйте данное сообщение.";
 
-        EmailServiceImpl emailSender = new EmailServiceImpl();
-        emailSender.sendSimpleMessage(user.getEmail(), subject, text);
+        sendSimpleMessage(user.getEmail(), subject, text);
+    }
+
+    public void sendSimpleMessage(String to, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("noreply@meeple.com");
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        emailSender.send(message);
     }
 
     private void checkUser(User newUser) {
