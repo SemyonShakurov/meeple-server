@@ -21,6 +21,11 @@ public class User {
 
     private String email;
 
+    private boolean enabled;
+
+    @JsonIgnore
+    private Integer code;
+
     private String photoUrl;
 
     @JsonIgnore
@@ -38,6 +43,11 @@ public class User {
     @JsonIgnore
     @ElementCollection
     private List<Integer> declined;
+
+    public User() {
+        super();
+        this.enabled = false;
+    }
 
     public void setId(Integer id) {
         this.id = id;
@@ -117,5 +127,13 @@ public class User {
 
     public List<Integer> getDeclined() {
         return declined;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
+    public Integer getCode() {
+        return code;
     }
 }

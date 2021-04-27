@@ -4,14 +4,20 @@ import com.mscorp.meepleserver.models.User;
 import com.mscorp.meepleserver.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping(path = "/register")
 public class RegistrationController {
+
+    private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-+]+(.[_A-Za-z0-9-]+)*@" +
+            "[A-Za-z0-9-]+(.[A-Za-z0-9]+)*(.[A-Za-z]{2,})$";
 
     @Autowired
     private UserRepository userRepository;
@@ -22,6 +28,8 @@ public class RegistrationController {
                     @RequestParam String name,
                     @RequestParam String email,
                     @RequestParam String password) throws ResponseStatusException {
+        if (!Pattern.compile(EMAIL_PATTERN).matcher(email).matches())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "incorrect email");
         User user = new User();
         user.setNickname(nickname);
         user.setPassword(password);
@@ -32,8 +40,26 @@ public class RegistrationController {
         user.setRequestsToOthers(new ArrayList<>());
         user.setPhotoUrl("https://image.flaticon.com/icons/png/512/168/168726.png");
         checkUser(user);
+        confirmRegistration(user);
         userRepository.save(user);
         return user;
+    }
+    
+    private void confirmRegistration(User user) {
+        Integer code = (int) (1000 + 9000 * Math.random());
+        user.setCode(code);
+
+        String email = user.getEmail();
+        String subject = "Подтверждение почты";
+        String text = "Добро пожаловать в Meeple! Для подтверждения почты введите код:\n" +
+                code + "\nЕсли вы не регистрировались в приложении, проигнорируйте данное сообщение.";
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setSubject(subject);
+        message.setText(text);
+        message.setTo(email);
+
+        JavaMailSenderImpl emailSender = new JavaMailSenderImpl();
+        emailSender.send(message);
     }
 
     private void checkUser(User newUser) {
