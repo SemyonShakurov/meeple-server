@@ -51,20 +51,20 @@ public class RegistrationController {
 
     @PutMapping(path = "/confirmEmail")
     public @ResponseBody
-    boolean confirmEmail(@RequestParam Integer id,
-                         @RequestParam Integer code) {
+    User confirmEmail(@RequestParam Integer id,
+                      @RequestParam Integer code) {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "user is not exists");
         User user = userOptional.get();
 
         if (!user.getCode().equals(code))
-            return false;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "the code does not match");
 
         user.setEnabled(true);
         user.setCode(0);
         userRepository.save(user);
-        return true;
+        return user;
     }
 
     private void confirmRegistration(User user) {
