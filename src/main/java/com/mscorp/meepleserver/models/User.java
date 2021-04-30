@@ -136,4 +136,8 @@ public class User {
     public Integer getCode() {
         return code;
     }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 }
