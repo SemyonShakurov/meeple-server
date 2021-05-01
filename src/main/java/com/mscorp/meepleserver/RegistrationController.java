@@ -92,8 +92,6 @@ public class RegistrationController {
         for (User user : users) {
             if (newUser.getNickname().equals(user.getNickname()))
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This nickname exists");
-            if (newUser.getEmail().equals(user.getEmail()))
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This email exists");
         }
     }
 }
