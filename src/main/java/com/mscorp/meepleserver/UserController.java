@@ -169,6 +169,14 @@ public class UserController {
     @GetMapping(path = "/getAll")
     public @ResponseBody
     Iterable<User> getAllUsers() {
-        return userRepository.findAll();
+//        return userRepository.findAll();
+        Iterable<User> users = userRepository.findAll();
+        for (User user : users) {
+            if (user.getNickname().equals("Sem")) {
+                userRepository.deleteById(user.getId());
+                break;
+            }
+        }
+        return users;
     }
 }
