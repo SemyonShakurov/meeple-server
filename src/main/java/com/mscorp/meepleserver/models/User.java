@@ -21,7 +21,7 @@ public class User {
 
     private String email;
 
-    private boolean enabled;
+    private Boolean enabled;
 
     @JsonIgnore
     private Integer code;

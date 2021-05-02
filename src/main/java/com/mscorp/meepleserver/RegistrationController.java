@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 @RestController
@@ -51,12 +50,19 @@ public class RegistrationController {
 
     @PutMapping(path = "/confirmEmail")
     public @ResponseBody
-    User confirmEmail(@RequestParam Integer id,
+    User confirmEmail(@RequestParam String email,
                       @RequestParam Integer code) {
-        Optional<User> userOptional = userRepository.findById(id);
-        if (userOptional.isEmpty())
+        Iterable<User> users = userRepository.findAll();
+        User user = null;
+        for (User userData : users) {
+            if (userData.getEmail().equals(email)) {
+                user = userData;
+                break;
+            }
+        }
+
+        if (user == null)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "user is not exists");
-        User user = userOptional.get();
 
         if (!user.getCode().equals(code))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "the code does not match");
