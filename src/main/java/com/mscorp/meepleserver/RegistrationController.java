@@ -73,6 +73,29 @@ public class RegistrationController {
         return user;
     }
 
+    @PutMapping(path = "/sendCode")
+    public @ResponseBody
+    User sendCode(@RequestParam String nickname) {
+        Iterable<User> users = userRepository.findAll();
+        User user = null;
+        for (User userData : users) {
+            if (userData.getNickname().equals(nickname)) {
+                user = userData;
+                break;
+            }
+        }
+
+        if (user == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "nickname is not exists");
+        if (!user.getEnabled())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "user did not confirm mail");
+
+        user.setEnabled(false);
+        confirmRegistration(user);
+        userRepository.save(user);
+        return user;
+    }
+
     private void confirmRegistration(User user) {
         Integer code = (int) (1000 + 9000 * Math.random());
         user.setCode(code);

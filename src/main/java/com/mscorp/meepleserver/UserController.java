@@ -169,14 +169,9 @@ public class UserController {
     @GetMapping(path = "/getAll")
     public @ResponseBody
     Iterable<User> getAllUsers() {
+        userRepository.deleteById(15);
+        userRepository.deleteById(34);
+        userRepository.deleteById(35);
         return userRepository.findAll();
-//        Iterable<User> users = userRepository.findAll();
-//        for (User user : users) {
-//            if (user.getEmail().equals("ssshakurov@edu.hse.ru")) {
-//                userRepository.deleteById(user.getId());
-//                break;
-//            }
-//        }
-//        return users;
     }
 }
