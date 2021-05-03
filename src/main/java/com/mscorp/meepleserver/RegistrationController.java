@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 @RestController
@@ -92,6 +93,20 @@ public class RegistrationController {
 
         user.setEnabled(false);
         confirmRegistration(user);
+        userRepository.save(user);
+        return user;
+    }
+
+    @PutMapping(path = "/resetPassword")
+    public @ResponseBody
+    User resetPassword(@RequestParam Integer id,
+                       @RequestParam String password) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "user is not exists");
+        User user = userOptional.get();
+
+        user.setPassword(password);
         userRepository.save(user);
         return user;
     }
