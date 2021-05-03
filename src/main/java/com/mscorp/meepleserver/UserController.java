@@ -169,9 +169,6 @@ public class UserController {
     @GetMapping(path = "/getAll")
     public @ResponseBody
     Iterable<User> getAllUsers() {
-        userRepository.deleteById(15);
-        userRepository.deleteById(34);
-        userRepository.deleteById(35);
         return userRepository.findAll();
     }
 }
