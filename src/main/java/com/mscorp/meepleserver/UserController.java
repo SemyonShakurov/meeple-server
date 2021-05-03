@@ -169,6 +169,7 @@ public class UserController {
     @GetMapping(path = "/getAll")
     public @ResponseBody
     Iterable<User> getAllUsers() {
+        userRepository.deleteAll();
         return userRepository.findAll();
     }
 }
