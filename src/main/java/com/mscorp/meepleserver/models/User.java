@@ -36,6 +36,9 @@ public class User {
     @ElementCollection
     private List<Integer> requestsFromOthers;
 
+    @ElementCollection
+    private List<Integer> games;
+
     @JsonIgnore
     @ElementCollection
     private List<Integer> requestsToOthers;
@@ -143,5 +146,17 @@ public class User {
 
     public Boolean getEnabled() {
         return enabled;
+    }
+
+    public List<Integer> getGames() {
+        return games;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public void setGames(List<Integer> games) {
+        this.games = games;
     }
 }
