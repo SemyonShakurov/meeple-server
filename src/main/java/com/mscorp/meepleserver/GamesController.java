@@ -36,7 +36,6 @@ public class GamesController {
         game.setType(type);
         game.setName(name);
         game.setPic(pic);
-        checkBoardGame(game);
         boardGameRepository.save(game);
         return game;
     }
@@ -71,14 +70,6 @@ public class GamesController {
 
         user.getGames().remove(gameId);
         userRepository.save(user);
-    }
-
-    private void checkBoardGame(BoardGame newBoardGame) {
-        Iterable<BoardGame> games = boardGameRepository.findAll();
-        for (BoardGame game : games) {
-            if (game.getName().equals(newBoardGame.getName()))
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "this game exists");
-        }
     }
 
     @GetMapping(path = "/getAll")
