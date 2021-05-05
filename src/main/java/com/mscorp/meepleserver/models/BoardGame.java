@@ -16,7 +16,7 @@ public class BoardGame {
 
     private String type;
 
-    private Integer countPlayer;
+    private String countPlayer;
 
     private Integer time;
 
@@ -56,7 +56,7 @@ public class BoardGame {
         return description;
     }
 
-    public void setCountPlayer(Integer countPlayer) {
+    public void setCountPlayer(String countPlayer) {
         this.countPlayer = countPlayer;
     }
 
@@ -68,7 +68,7 @@ public class BoardGame {
         this.time = time;
     }
 
-    public Integer getCountPlayer() {
+    public String getCountPlayer() {
         return countPlayer;
     }
 

@@ -25,7 +25,7 @@ public class GamesController {
     public @ResponseBody
     BoardGame addBoardGame(@RequestParam String name,
                            @RequestParam String type,
-                           @RequestParam Integer countPlayer,
+                           @RequestParam String countPlayer,
                            @RequestParam Integer time,
                            @RequestParam String description,
                            @RequestParam String pic) throws ResponseStatusException {
