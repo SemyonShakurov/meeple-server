@@ -16,11 +16,13 @@ public class BoardGame {
 
     private String type;
 
-    private Integer countOfPlayers;
+    private Integer countPlayer;
 
-    private Integer duration;
+    private Integer time;
 
     private String description;
+
+    private String pic;
 
     public void setId(Integer id) {
         this.id = id;
@@ -46,27 +48,35 @@ public class BoardGame {
         return type;
     }
 
-    public void setCountOfPlayers(Integer countOfPlayers) {
-        this.countOfPlayers = countOfPlayers;
-    }
-
-    public Integer getCountOfPlayers() {
-        return countOfPlayers;
-    }
-
-    public void setDuration(Integer duration) {
-        this.duration = duration;
-    }
-
-    public Integer getDuration() {
-        return duration;
-    }
-
     public void setDescription(String description) {
         this.description = description;
     }
 
     public String getDescription() {
         return description;
+    }
+
+    public void setCountPlayer(Integer countPlayer) {
+        this.countPlayer = countPlayer;
+    }
+
+    public void setPic(String pic) {
+        this.pic = pic;
+    }
+
+    public void setTime(Integer time) {
+        this.time = time;
+    }
+
+    public Integer getCountPlayer() {
+        return countPlayer;
+    }
+
+    public Integer getTime() {
+        return time;
+    }
+
+    public String getPic() {
+        return pic;
     }
 }

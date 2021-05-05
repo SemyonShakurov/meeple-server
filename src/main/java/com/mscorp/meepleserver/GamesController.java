@@ -23,8 +23,8 @@ public class GamesController {
                            @RequestParam String description) throws ResponseStatusException {
         BoardGame game = new BoardGame();
         game.setDescription(description);
-        game.setDuration(duration);
-        game.setCountOfPlayers(countOfPlayers);
+        game.setTime(duration);
+        game.setCountPlayer(countOfPlayers);
         game.setType(type);
         game.setName(name);
         checkBoardGame(game);
