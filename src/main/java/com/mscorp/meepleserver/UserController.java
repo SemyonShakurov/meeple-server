@@ -171,4 +171,18 @@ public class UserController {
     Iterable<User> getAllUsers() {
         return userRepository.findAll();
     }
+
+    @PutMapping(path = "updateAvatar")
+    public @ResponseBody
+    User updateAvatar(@RequestParam Integer id,
+                      @RequestParam String pic) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "user is not exists");
+        User user = userOptional.get();
+
+        user.setPhotoUrl(pic);
+        userRepository.save(user);
+        return user;
+    }
 }
