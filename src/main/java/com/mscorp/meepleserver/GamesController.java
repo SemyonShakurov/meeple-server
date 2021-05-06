@@ -41,7 +41,8 @@ public class GamesController {
     }
 
     @PutMapping(path = "/addGame")
-    public void addGame(@RequestParam Integer userId,
+    public @ResponseBody
+    BoardGame addGame(@RequestParam Integer userId,
                         @RequestParam Integer gameId) {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty())
@@ -54,10 +55,12 @@ public class GamesController {
 
         user.getGames().add(gameId);
         userRepository.save(user);
+        return gameOptional.get();
     }
 
     @PutMapping(path = "/removeGame")
-    public void removeGame(@RequestParam Integer userId,
+    public @ResponseBody
+    BoardGame removeGame(@RequestParam Integer userId,
                            @RequestParam Integer gameId) {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty())
@@ -70,6 +73,7 @@ public class GamesController {
 
         user.getGames().remove(gameId);
         userRepository.save(user);
+        return gameOptional.get();
     }
 
     @GetMapping(path = "/getAll")
