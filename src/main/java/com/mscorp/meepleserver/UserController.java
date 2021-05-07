@@ -4,8 +4,6 @@ import com.mscorp.meepleserver.models.Friends;
 import com.mscorp.meepleserver.models.User;
 import com.mscorp.meepleserver.repositories.UserRepository;
 import com.mscorp.meepleserver.services.FileStorageService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,8 +18,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "/user")
 public class UserController {
-
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private FileStorageService fileStorageService;
@@ -201,11 +196,5 @@ public class UserController {
         user.setPhotoUrl(fileDownloadUri);
         userRepository.save(user);
         return user;
-    }
-
-    @GetMapping("/downloadFile/{fileName:.+}")
-    public
-    @ResponseBody byte[] downloadFile(@PathVariable String fileName) throws IOException {
-        return this.fileStorageService.loadFileAsResource(fileName);
     }
 }
