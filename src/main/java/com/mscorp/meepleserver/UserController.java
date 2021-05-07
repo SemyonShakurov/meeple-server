@@ -3,11 +3,22 @@ package com.mscorp.meepleserver;
 import com.mscorp.meepleserver.models.Friends;
 import com.mscorp.meepleserver.models.User;
 import com.mscorp.meepleserver.repositories.UserRepository;
+import com.mscorp.meepleserver.services.FileStorageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +26,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "/user")
 public class UserController {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @Autowired
     private UserRepository userRepository;
@@ -172,17 +188,44 @@ public class UserController {
         return userRepository.findAll();
     }
 
-    @PutMapping(path = "updateAvatar")
+    @PostMapping(path = "/uploadAvatar")
     public @ResponseBody
-    User updateAvatar(@RequestParam Integer id,
-                      @RequestParam String pic) {
+    User uploadAvatar(@RequestParam Integer id,
+                      @RequestParam("file") MultipartFile file) {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "user is not exists");
         User user = userOptional.get();
 
-        user.setPhotoUrl(pic);
+        String fileName = fileStorageService.storeFile(file);
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/downloadFile/")
+                .path(fileName)
+                .toUriString();
+
+        user.setPhotoUrl(fileDownloadUri);
         userRepository.save(user);
         return user;
+    }
+
+    @GetMapping("/downloadFile/{fileName:.+}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
+        Resource resource = fileStorageService.loadFileAsResource(fileName);
+
+        String contentType = null;
+        try {
+            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+        } catch (IOException ex) {
+            logger.info("Could not determine file type.");
+        }
+
+        if(contentType == null) {
+            contentType = "application/octet-stream";
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
     }
 }
