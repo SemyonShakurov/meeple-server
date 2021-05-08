@@ -43,6 +43,7 @@ public class RegistrationController {
         user.setRequestsFromOthers(new ArrayList<>());
         user.setRequestsToOthers(new ArrayList<>());
         user.setGames(new ArrayList<>());
+        user.setEvents(new ArrayList<>());
         user.setPhotoUrl("https://image.flaticon.com/icons/png/512/168/168726.png");
         checkUser(user);
         confirmRegistration(user);

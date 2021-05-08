@@ -1,7 +1,9 @@
 package com.mscorp.meepleserver;
 
 import com.mscorp.meepleserver.models.Event;
+import com.mscorp.meepleserver.models.User;
 import com.mscorp.meepleserver.repositories.EventRepository;
+import com.mscorp.meepleserver.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +15,9 @@ public class EventController {
 
     @Autowired
     private EventRepository eventRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping(path = "/addEvent")
     public @ResponseBody
@@ -37,6 +42,7 @@ public class EventController {
         event.setType(type);
         event.setInfo(info);
         event.setMembers(members);
+        User creator = userRepository.findById(creatorId).get();
         eventRepository.save(event);
         return event;
     }

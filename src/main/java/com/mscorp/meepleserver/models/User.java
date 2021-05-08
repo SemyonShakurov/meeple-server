@@ -47,6 +47,9 @@ public class User {
     @ElementCollection
     private List<Integer> declined;
 
+    @ElementCollection
+    private List<Integer> events;
+
     public User() {
         super();
         this.enabled = false;
@@ -158,5 +161,13 @@ public class User {
 
     public void setGames(List<Integer> games) {
         this.games = games;
+    }
+
+    public void setEvents(List<Integer> events) {
+        this.events = events;
+    }
+
+    public List<Integer> getEvents() {
+        return events;
     }
 }
