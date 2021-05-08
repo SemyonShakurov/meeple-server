@@ -42,7 +42,16 @@ public class EventController {
         event.setType(type);
         event.setInfo(info);
         event.setMembers(members);
+
         User creator = userRepository.findById(creatorId).get();
+        creator.getEvents().add(event.getId());
+        userRepository.save(creator);
+        for (Integer userId : members) {
+            User user = userRepository.findById(userId).get();
+            user.getEvents().add(event.getId());
+            userRepository.save(user);
+        }
+
         eventRepository.save(event);
         return event;
     }

@@ -175,10 +175,6 @@ public class UserController {
     @GetMapping(path = "/getAll")
     public @ResponseBody
     Iterable<User> getAllUsers() {
-        for (User user : userRepository.findAll()) {
-            user.setEvents(new ArrayList<>());
-            userRepository.save(user);
-        }
         return userRepository.findAll();
     }
 
