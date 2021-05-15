@@ -48,11 +48,11 @@ public class EventController {
         User creator = userRepository.findById(creatorId).get();
         creator.getEvents().add(event.getId());
         userRepository.save(creator);
-        for (Integer userId : members) {
-            User user = userRepository.findById(userId).get();
-            user.getEvents().add(event.getId());
-            userRepository.save(user);
-        }
+//        for (Integer userId : members) {
+//            User user = userRepository.findById(userId).get();
+//            user.getEvents().add(event.getId());
+//            userRepository.save(user);
+//        }
 
         eventRepository.save(event);
         return parseToJsonObj(event);
