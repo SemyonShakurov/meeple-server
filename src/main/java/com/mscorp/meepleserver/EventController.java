@@ -54,7 +54,7 @@ public class EventController {
 //            userRepository.save(user);
 //        }
 
-        eventRepository.save(event);
+//        eventRepository.save(event);
         return parseToJsonObj(event);
     }
 
