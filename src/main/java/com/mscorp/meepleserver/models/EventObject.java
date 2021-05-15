@@ -1,20 +1,15 @@
 package com.mscorp.meepleserver.models;
 
-import javax.persistence.*;
 import java.util.List;
 
-@Entity
-public class Event {
+public class EventObject {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer Id;
 
     private String title;
 
     private String count;
 
-    @ElementCollection
     private List<Integer> games;
 
     private Integer playersLevel;
@@ -23,8 +18,7 @@ public class Event {
 
     private Long date;
 
-    @ElementCollection
-    private List<Integer> members;
+    private List<User> members;
 
     private Double lat;
 
@@ -52,7 +46,7 @@ public class Event {
         this.count = count;
     }
 
-    public void setMembers(List<Integer> members) {
+    public void setMembers(List<User> members) {
         this.members = members;
     }
 
@@ -100,7 +94,7 @@ public class Event {
         return playersLevel;
     }
 
-    public List<Integer> getMembers() {
+    public List<User> getMembers() {
         return members;
     }
 

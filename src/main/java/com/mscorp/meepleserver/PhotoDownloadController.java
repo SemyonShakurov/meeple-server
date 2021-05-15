@@ -18,7 +18,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/")
-public class photoDownloadController {
+public class PhotoDownloadController {
 
     @Autowired
     private FileStorageService fileStorageService;

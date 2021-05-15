@@ -1,12 +1,14 @@
 package com.mscorp.meepleserver;
 
 import com.mscorp.meepleserver.models.Event;
+import com.mscorp.meepleserver.models.EventObject;
 import com.mscorp.meepleserver.models.User;
 import com.mscorp.meepleserver.repositories.EventRepository;
 import com.mscorp.meepleserver.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -21,27 +23,27 @@ public class EventController {
 
     @PostMapping(path = "/addEvent")
     public @ResponseBody
-    Event addEvent(@RequestParam String title,
-                   @RequestParam Integer count,
-                   @RequestParam List<Integer> games,
-                   @RequestParam Integer playersLevel,
-                   @RequestParam Integer type,
-                   @RequestParam String info,
-                   @RequestParam Integer date,
-                   @RequestParam Integer access,
-                   @RequestParam List<Integer> members,
-                   @RequestParam Integer creatorId) {
+    EventObject addEvent(@RequestParam String title,
+                         @RequestParam String count,
+                         @RequestParam List<Integer> games,
+                         @RequestParam Integer playersLevel,
+                         @RequestParam String info,
+                         @RequestParam Long date,
+                         @RequestParam List<Integer> members,
+                         @RequestParam Double lat,
+                         @RequestParam Double lng,
+                         @RequestParam Integer creatorId) {
         Event event = new Event();
-        event.setCount(count);
-        event.setAccess(access);
-        event.setCreatorId(creatorId);
-        event.setDate(date);
-        event.setGames(games);
         event.setTitle(title);
+        event.setCount(count);
+        event.setGames(games);
         event.setPlayersLevel(playersLevel);
-        event.setType(type);
         event.setInfo(info);
+        event.setDate(date);
         event.setMembers(members);
+        event.setLat(lat);
+        event.setLng(lng);
+        event.setCreatorId(creatorId);
 
         User creator = userRepository.findById(creatorId).get();
         creator.getEvents().add(event.getId());
@@ -53,12 +55,38 @@ public class EventController {
         }
 
         eventRepository.save(event);
-        return event;
+        return parseToJsonObj(event);
     }
 
     @GetMapping(path = "getAll")
     public @ResponseBody
-    Iterable<Event> getEvents() {
-        return eventRepository.findAll();
+    Iterable<EventObject> getEvents() {
+        Iterable<Event> events = eventRepository.findAll();
+        List<EventObject> eventObjects = new ArrayList<>();
+        for (Event event : events) {
+            eventObjects.add(parseToJsonObj(event));
+        }
+        return eventObjects;
+    }
+
+    private EventObject parseToJsonObj(Event event) {
+        EventObject eventObject = new EventObject();
+        eventObject.setId(event.getId());
+        eventObject.setTitle(event.getTitle());
+        eventObject.setCount(event.getCount());
+        eventObject.setGames(event.getGames());
+        eventObject.setPlayersLevel(event.getPlayersLevel());
+        eventObject.setInfo(event.getInfo());
+        eventObject.setDate(event.getDate());
+        eventObject.setLat(event.getLat());
+        eventObject.setLng(event.getLng());
+        eventObject.setCreatorId(event.getCreatorId());
+        List<User> members = new ArrayList<>();
+        for (Integer id : event.getMembers()) {
+            User user = userRepository.findById(id).get();
+            members.add(user);
+        }
+        eventObject.setMembers(members);
+        return eventObject;
     }
 }
