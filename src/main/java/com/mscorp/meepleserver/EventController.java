@@ -61,9 +61,6 @@ public class EventController {
     @GetMapping(path = "getAll")
     public @ResponseBody
     Iterable<EventObject> getEvents() {
-        eventRepository.deleteAll();
-
-
         Iterable<Event> events = eventRepository.findAll();
         List<EventObject> eventObjects = new ArrayList<>();
         for (Event event : events) {
