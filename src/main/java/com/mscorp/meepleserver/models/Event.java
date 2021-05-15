@@ -8,7 +8,7 @@ public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer Id;
+    private Integer id;
 
     private String title;
 
@@ -33,7 +33,7 @@ public class Event {
     private Integer creatorId;
 
     public void setId(Integer id) {
-        Id = id;
+        this.id = id;
     }
 
     public void setTitle(String title) {
@@ -77,7 +77,7 @@ public class Event {
     }
 
     public Integer getId() {
-        return Id;
+        return id;
     }
 
     public List<Integer> getGames() {

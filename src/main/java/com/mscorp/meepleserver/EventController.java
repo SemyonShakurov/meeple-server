@@ -23,16 +23,16 @@ public class EventController {
 
     @PostMapping(path = "/addEvent")
     public @ResponseBody
-    Event addEvent(@RequestParam String title,
-                         @RequestParam String count,
-                         @RequestParam List<Integer> games,
-                         @RequestParam Integer playersLevel,
-                         @RequestParam String info,
-                         @RequestParam Long date,
-                         @RequestParam List<Integer> members,
-                         @RequestParam Double lat,
-                         @RequestParam Double lng,
-                         @RequestParam Integer creatorId) {
+    EventObject addEvent(@RequestParam String title,
+                   @RequestParam String count,
+                   @RequestParam List<Integer> games,
+                   @RequestParam Integer playersLevel,
+                   @RequestParam String info,
+                   @RequestParam Long date,
+                   @RequestParam List<Integer> members,
+                   @RequestParam Double lat,
+                   @RequestParam Double lng,
+                   @RequestParam Integer creatorId) {
         Event event = new Event();
         event.setTitle(title);
         event.setCount(count);
@@ -44,18 +44,16 @@ public class EventController {
         event.setLat(lat);
         event.setLng(lng);
         event.setCreatorId(creatorId);
-
-//        User creator = userRepository.findById(creatorId).get();
-//        creator.getEvents().add(event.getId());
-//        userRepository.save(creator);
-//        for (Integer userId : members) {
-//            User user = userRepository.findById(userId).get();
-//            user.getEvents().add(event.getId());
-//            userRepository.save(user);
-//        }
-
         eventRepository.save(event);
-        return event;
+        User creator = userRepository.findById(creatorId).get();
+        creator.getEvents().add(event.getId());
+        userRepository.save(creator);
+        for (Integer userId : members) {
+            User user = userRepository.findById(userId).get();
+            user.getEvents().add(event.getId());
+            userRepository.save(user);
+        }
+        return parseToJsonObj(event);
     }
 
     @GetMapping(path = "getAll")
