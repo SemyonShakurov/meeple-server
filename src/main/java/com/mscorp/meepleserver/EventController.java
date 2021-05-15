@@ -56,7 +56,33 @@ public class EventController {
         return parseToJsonObj(event);
     }
 
-    @GetMapping(path = "getAll")
+    @PutMapping(path = "/subscribeToEvent")
+    public @ResponseBody
+    EventObject signToEvent(@RequestParam Integer eventId,
+                            @RequestParam Integer userId) {
+        Event event = eventRepository.findById(eventId).get();
+        event.getMembers().add(userId);
+        eventRepository.save(event);
+        User user = userRepository.findById(userId).get();
+        user.getEvents().add(eventId);
+        userRepository.save(user);
+        return parseToJsonObj(event);
+    }
+
+    @PutMapping(path = "/unsubscribeFromEvent")
+    public @ResponseBody
+    EventObject unsubscribeFromEvent(@RequestParam Integer eventId,
+                                     @RequestParam Integer userId) {
+        Event event = eventRepository.findById(eventId).get();
+        event.getMembers().remove(userId);
+        eventRepository.save(event);
+        User user = userRepository.findById(userId).get();
+        user.getEvents().remove(eventId);
+        userRepository.save(user);
+        return parseToJsonObj(event);
+    }
+
+    @GetMapping(path = "/getAll")
     public @ResponseBody
     Iterable<EventObject> getEvents() {
         Iterable<Event> events = eventRepository.findAll();
