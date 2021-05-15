@@ -23,7 +23,7 @@ public class EventController {
 
     @PostMapping(path = "/addEvent")
     public @ResponseBody
-    EventObject addEvent(@RequestParam String title,
+    Event addEvent(@RequestParam String title,
                          @RequestParam String count,
                          @RequestParam List<Integer> games,
                          @RequestParam Integer playersLevel,
@@ -55,7 +55,7 @@ public class EventController {
 //        }
 
 //        eventRepository.save(event);
-        return parseToJsonObj(event);
+        return event;
     }
 
     @GetMapping(path = "getAll")
